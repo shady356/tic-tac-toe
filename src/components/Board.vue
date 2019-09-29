@@ -84,7 +84,7 @@ export default {
       let tileToPlay;
       
       
-        tileToPlay = Math.floor((Math.random() * 8) + 0);
+      tileToPlay = this.generateAiTileToPlay()
      
       setTimeout(()=>{
         if( this.canPlayTile(tileToPlay) ) {
@@ -94,6 +94,15 @@ export default {
       }, 500)
       
     },
+
+    generateAiTileToPlay() {
+      if(this.takenTiles.length === 1 && this.takenTiles.includes(4)) {
+        return 0
+      } else {
+        return Math.floor((Math.random() * 8) + 0);
+      }
+    },
+
     canPlayTile(tile) {
       console.log(tile)
       if(this.takenTiles.includes(tile)) {
@@ -107,6 +116,7 @@ export default {
     },
     gameIsDone() {
       
+      
       if ( this.checkGame('x') ) {
         this.$emit('endGame', 'Player X won!' )
         this.done = true
@@ -117,11 +127,22 @@ export default {
         this.done = true
         return true
       }
+      if (this.checkTie() ) {
+        this.$emit('endGame', 'Tie!' )
+        this.done = true
+        return true
+      }
       this.done = false
       return false
 
     },
+
+    checkTie () {
+      return (this.takenTiles.length === 9) 
+    },
+
     checkGame (mark) {
+      
       let ts = this.tiles;
        for (let i = 0; i < 8; i++) {
         if(i === 0) {
