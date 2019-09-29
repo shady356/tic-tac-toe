@@ -15,7 +15,7 @@
         </div>
       </li>
     </ul>
-    <button v-if="gameStatus.gameIsDone" @click="resetGame">New Game</button>
+    <button v-if="done" @click="resetGame">New Game</button>
   </div>
 </template>
 
@@ -28,9 +28,9 @@ export default {
       NUM_OF_TILES: 9,
       currentPlayer: 'x',
       takenTiles: [],
-      gameStatus: {
-        gameIsDone: false,
-      },
+
+      done: false,
+
       isAIPlaying: false
     }
   },
@@ -41,7 +41,7 @@ export default {
 
     resetGame() {
       this.$emit('endGame', null )
-      this.gameStatus.gameIsDone = false
+      this.done = false
       this.takenTiles = []
       this.tiles = []
       this.currentPlayer = 'x'
@@ -60,8 +60,9 @@ export default {
     },
     playerPlays(tile) {
       if(!this.isAIPlaying) {
-        this.playTile(tile)
-        this.aiPlays()
+        if( this.playTile(tile) ) {
+          this.aiPlays()
+        }
       }
     },
     playTile(tile) {
@@ -69,10 +70,12 @@ export default {
         this.tiles[tile.id].playerMark = this.currentPlayer
         this.tiles[tile.id].played = true
         this.takenTiles.push(tile.id)
-        if(!this.gameIsDone()) {
+        if(!this.gameIsDone() && !this.done) {
           this.changePlayer()
+          return true
         } else {
-          this.gameStatus.gameIsDone = true
+          this.done = true
+          return false
         }
       }
     },
@@ -106,13 +109,15 @@ export default {
       
       if ( this.checkGame('x') ) {
         this.$emit('endGame', 'Player X won!' )
+        this.done = true
         return true
       }
       if ( this.checkGame('o') ) {
         this.$emit('endGame', 'Player O won!')
+        this.done = true
         return true
       }
-      
+      this.done = false
       return false
 
     },
@@ -182,7 +187,7 @@ export default {
     width: calc(100% / 3);
     height: calc(100% / 3);
     align-self: center;
-    line-height: 140px;
+    line-height: 100px;
     text-align: center;
     box-shadow: 1px 1px #555 inset;
     color: #aaa;
