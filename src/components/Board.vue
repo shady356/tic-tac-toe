@@ -7,11 +7,15 @@
         class="tile"
         @click="playerPlays(tile)"
       >
-        <div v-if="tile.played">
+        <div 
+          v-if="tile.played"
+          :class="[ 'mark', (tile.playerMark === 'o') ? 'o' : 'x' ]"
+        >
           {{tile.playerMark}}
         </div>
       </li>
     </ul>
+    <button v-if="gameStatus.gameIsDone" @click="resetGame">New Game</button>
   </div>
 </template>
 
@@ -26,13 +30,23 @@ export default {
       takenTiles: [],
       gameStatus: {
         gameIsDone: false,
-      }
+      },
+      isAIPlaying: false
     }
   },
   created() {
     this.tiles = this.generateTiles()
   },
   methods: {
+
+    resetGame() {
+      this.$emit('endGame', null )
+      this.gameStatus.gameIsDone = false
+      this.takenTiles = []
+      this.tiles = []
+      this.currentPlayer = 'x'
+      this.tiles = this.generateTiles()
+    },
     generateTiles() {
       let tiles = []
       for(let i = 0; i < this.NUM_OF_TILES; i++) {
@@ -45,26 +59,36 @@ export default {
       return tiles
     },
     playerPlays(tile) {
-      this.playTile(tile)
-      this.aiPlays()
+      if(!this.isAIPlaying) {
+        this.playTile(tile)
+        this.aiPlays()
+      }
     },
     playTile(tile) {
       if (!tile.played) {
         this.tiles[tile.id].playerMark = this.currentPlayer
         this.tiles[tile.id].played = true
         this.takenTiles.push(tile.id)
-        this.gameIsDone()
-        this.changePlayer()
+        if(!this.gameIsDone()) {
+          this.changePlayer()
+        } else {
+          this.gameStatus.gameIsDone = true
+        }
       }
     },
     aiPlays() {
-
-      let tileToPlay = Math.floor((Math.random() * 8) + 0);
-      console.log(tileToPlay)
-
-      if( this.canPlayTile(tileToPlay) ) {
-        this.playTile(this.tiles[tileToPlay])
-      }
+      this.isAIPlaying = true
+      let tileToPlay;
+      
+      
+        tileToPlay = Math.floor((Math.random() * 8) + 0);
+     
+      setTimeout(()=>{
+        if( this.canPlayTile(tileToPlay) ) {
+          this.playTile(this.tiles[tileToPlay])
+        }
+        this.isAIPlaying = false
+      }, 500)
       
     },
     canPlayTile(tile) {
@@ -80,17 +104,16 @@ export default {
     },
     gameIsDone() {
       
-      
-      
       if ( this.checkGame('x') ) {
-        alert('x won')
-        this.generateTiles()
+        this.$emit('endGame', 'Player X won!' )
+        return true
       }
       if ( this.checkGame('o') ) {
-        alert('o won')
-        this.generateTiles()
+        this.$emit('endGame', 'Player O won!')
+        return true
       }
       
+      return false
 
     },
     checkGame (mark) {
@@ -149,19 +172,21 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     margin: 0 auto;
-    background: #111;
+
     width: 90vw;
     height: 90vw;
-    border: 1px solid #444;
+    
   }
 
   .tile {
     width: calc(100% / 3);
     height: calc(100% / 3);
     align-self: center;
+    line-height: 140px;
     text-align: center;
     box-shadow: 1px 1px #555 inset;
     color: #aaa;
+    font-size: 80px;
   }
 
   .tile:nth-child(1) {
@@ -174,5 +199,21 @@ export default {
   .tile:nth-child(4), 
   .tile:nth-child(7) {
     box-shadow: 0px 1px #555 inset;
+  }
+
+  .tile .mark.o {
+    color: #00aeff;
+  }
+  .tile .mark.x {
+    color: #d6a51d;
+  }
+  button {
+    border: none;
+    background: rgb(4, 139, 76);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 20px;
+    margin: 80px auto 0;
   }
 </style>

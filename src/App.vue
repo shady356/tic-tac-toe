@@ -1,7 +1,14 @@
 <template>
   <div id="app">
    
-    <board/>
+    <board
+      class="board"
+      @endGame="showEndGame"
+    />
+
+    <div class="showEndGame" v-if="isEndGame">
+      {{endGameText}}
+    </div>
   
   </div>
 </template>
@@ -15,6 +22,18 @@ export default {
   components: {
     HelloWorld,
     Board
+  },
+  data() {
+    return {
+      isEndGame: false,
+      endGameText: ""
+    }
+  },
+  methods: {
+    showEndGame(endGameText) {
+      this.isEndGame = true
+      this.endGameText = endGameText
+    }
   }
 }
 </script>
@@ -30,5 +49,16 @@ export default {
 }
 body {
   background: #222;
+}
+
+.board {
+  padding-top: 20px;
+}
+
+.showEndGame {
+  text-align: center;
+  color: #fff;
+  font-size: 36px;
+  margin-top: 20px;
 }
 </style>
