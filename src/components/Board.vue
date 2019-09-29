@@ -67,6 +67,7 @@ export default {
     },
     playTile(tile) {
       if (!tile.played) {
+        this.$emit('endGame', '' )
         this.tiles[tile.id].playerMark = this.currentPlayer
         this.tiles[tile.id].played = true
         this.takenTiles.push(tile.id)
@@ -82,6 +83,7 @@ export default {
     aiPlays() {
       this.isAIPlaying = true
       let tileToPlay;
+      this.$emit('comThinking', '🤔')
       
       
       tileToPlay = this.generateAiTileToPlay()
@@ -91,6 +93,7 @@ export default {
           this.playTile(this.tiles[tileToPlay])
         }
         this.isAIPlaying = false
+        this.$emit('comThinking', '')
       }, 500)
       
     },
@@ -98,7 +101,9 @@ export default {
     generateAiTileToPlay() {
       if(this.takenTiles.length === 1 && this.takenTiles.includes(4)) {
         return 0
-      } else {
+      } 
+
+      else {
         return Math.floor((Math.random() * 8) + 0);
       }
     },
@@ -128,7 +133,7 @@ export default {
         return true
       }
       if (this.checkTie() ) {
-        this.$emit('endGame', 'Tie!' )
+        this.$emit('endGame', 'Draw!' )
         this.done = true
         return true
       }
@@ -227,6 +232,11 @@ export default {
     box-shadow: 0px 1px #555 inset;
   }
 
+  .tile .mark {
+    transition: all .3s;
+    animation: setTile .3s ease-in-out;
+  }
+
   .tile .mark.o {
     color: #00aeff;
   }
@@ -241,5 +251,17 @@ export default {
     border-radius: 20px;
     font-size: 20px;
     margin: 80px auto 0;
+  }
+
+  @keyframes setTile {
+    0% {
+      transform: scale(.5);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 </style>

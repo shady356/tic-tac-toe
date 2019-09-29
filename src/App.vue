@@ -4,10 +4,11 @@
     <board
       class="board"
       @endGame="showEndGame"
+      @comThinking="updateComThinking"
     />
 
-    <div class="showEndGame" v-if="isEndGame">
-      {{endGameText}}
+    <div class="msg">
+      {{msg}}
     </div>
   
   </div>
@@ -26,13 +27,16 @@ export default {
   data() {
     return {
       isEndGame: false,
-      endGameText: ""
+      msg: ""
     }
   },
   methods: {
     showEndGame(endGameText) {
       this.isEndGame = true
-      this.endGameText = endGameText
+      this.msg = endGameText
+    },
+    updateComThinking(text) {
+      this.msg = text
     }
   }
 }
@@ -40,12 +44,13 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 *{
   padding: 0;
   margin: 0;
   list-style: none;
+  font-family: 'Roboto', sans-serif;
 }
 body {
   background: #222;
@@ -55,7 +60,7 @@ body {
   padding-top: 20px;
 }
 
-.showEndGame {
+.msg {
   text-align: center;
   color: #fff;
   font-size: 36px;
