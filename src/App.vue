@@ -1,12 +1,14 @@
 <template>
   <div id="app">
    
-    <board
+    <!-- <board
       class="board"
       @endGame="showEndGame"
       @comThinking="updateComThinking"
-    />
+    /> -->
 
+    <FourInARow />
+    
     <div class="msg">
       {{msg}}
     </div>
@@ -16,13 +18,15 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
-import Board from './components/Board.vue'
+import FourInARow from './components/FourInARow.vue'
+//import Board from './components/Board.vue'
 
 export default {
   name: 'app',
   components: {
     HelloWorld,
-    Board
+    FourInARow
+   // Board
   },
   data() {
     return {
