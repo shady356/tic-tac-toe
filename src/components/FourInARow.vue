@@ -88,7 +88,9 @@ export default {
       
       if(row > -1) {
         this.grid[row][column.column].isPlayed = this.currentPlayer.color
-        // Check game status
+
+        // (!) TODO: Check game status
+        
         this.changePlayer()
       } else {
         alert('Oh! it is already filled up!')
