@@ -17,14 +17,12 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import FourInARow from './components/FourInARow.vue'
 //import Board from './components/Board.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
     FourInARow
    // Board
   },
@@ -57,7 +55,7 @@ export default {
   font-family: 'Roboto', sans-serif;
 }
 body {
-  background: #222;
+  background: #08a;
 }
 
 .board {

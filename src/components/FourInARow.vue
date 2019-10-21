@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="frame">
    <!-- Grid -->
+
    <div class="grid">
     <!-- Rows -->
       <div 
@@ -85,29 +86,58 @@ export default {
     },
     playColumn(column) {
       let row = this.canPlayColumn(column.column)
-      
-      if(row > -1) {
-        this.grid[row][column.column].isPlayed = this.currentPlayer.color
+      const playerColor = this.currentPlayer.color
+   
+      if(row >= 0) {
+        this.grid[row][column.column].isPlayed = playerColor
 
-        // (!) TODO: Check game status
+        this.isGame( {row:row, column:column.column, playerColor} )
         
         this.changePlayer()
       } else {
         alert('Oh! it is already filled up!')
       }
-    }
+    },
+    isGame(token) {
+      const tr = token.row
+      const tc = token.column
+      const pc = token.playerColor
+      const g = this.grid 
+      
+      //this.isHorizontal(tr,tc,pc,g)
+     
+  
+    },
+    /* isHorizontal(tr,tc,pc,g) {
+      //  0, 1, 2, 3, 4
+      let diff = this.gridSizeRow - tc // 5 - 5 = 0 || 
+      if(tc > 0)
+        
+        if ( g[tr][tc].isPlayed === tc && g[tr][tc] === )
+    } */
   }
 }
 </script>
 
 <style scoped>
 
-.grid {
+.frame {
+  display: block;
+  background-image: url('../assets/frame.png');
   margin: 100px auto 0;
+  height: 600px;
+  width: 635px;
+}
+
+.grid {
+  position: relative;
+  top: 34px;
+  margin: 0 auto;
   color: #777;
   font-size: 12px;
   width: 500px;
   height: 500px;
+  z-index: 100;
 }
 
 .grid .rows {
@@ -121,31 +151,35 @@ export default {
 .grid .rows .columns {
   
   width: calc(100% / 5);
-  border: 1px solid #444;
+  border: 1px solid #947e59;
+  background-image: url("../assets/tile.png");
+  background-position: center; 
+  
+
 }
 
 .ball {
+  position: relative;
   margin: 0 auto;
-  margin-top: 10px;
-  width: 50px;
-  height: 50px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
-  animation: dropBall .4s ease-out;
-
+  z-index: -1;
+  animation: dropBall 1000ms cubic-bezier(0.620, 0.150, 0.080, 0.980);
 }
 
 .ball.orange {
-  background: #e47207;
+  background-image: url('../assets/orangeBall.png')
 }
 .ball.blue {
-  background: #0793e4;
+  background-image: url('../assets/blueBall.png')
 }
 
 @keyframes dropBall {
   0% {
-    transform: translateY(-20vh);
+    transform: translateY(-70vh);
   }
-  89% {
+  85% {
     transform: translateY(0px);
   }
   90% {
